@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Creative Stopwatch</title>
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family: "Segoe UI", sans-serif;
+    }
+
+    body{
+      height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      background:linear-gradient(135deg,#0f172a,#111827,#1e293b);
+      overflow:hidden;
+      color:white;
+      position:relative;
+    }
+
+    /* Background Grid */
+
+    body::before{
+      content:"";
+      position:absolute;
+      width:100%;
+      height:100%;
+      background-image:
+      linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+
+      background-size:40px 40px;
+      z-index:0;
+    }
+
+    /* Floating Glow */
+
+    .glow1,
+    .glow2{
+      position:absolute;
+      border-radius:50%;
+      filter:blur(90px);
+      opacity:0.5;
+      animation:move 8s infinite alternate;
+    }
+
+    .glow1{
+      width:300px;
+      height:300px;
+      background:#00f2fe;
+      top:-80px;
+      left:-50px;
+    }
+
+    .glow2{
+      width:280px;
+      height:280px;
+      background:#8b5cf6;
+      bottom:-80px;
+      right:-50px;
+    }
+
+    @keyframes move{
+      from{
+        transform:translateY(0px);
+      }
+
+      to{
+        transform:translateY(30px);
+      }
+    }
+
+    /* Main Card */
+
+    .card{
+      width:420px;
+      padding:35px;
+      border-radius:25px;
+      background:rgba(255,255,255,0.07);
+      border:1px solid rgba(255,255,255,0.1);
+      backdrop-filter:blur(20px);
+      box-shadow:0 10px 40px rgba(0,0,0,0.5);
+      text-align:center;
+      position:relative;
+      z-index:2;
+    }
+
+    .tag{
+      display:inline-block;
+      padding:8px 18px;
+      background:rgba(0,242,254,0.15);
+      border:1px solid rgba(0,242,254,0.3);
+      border-radius:30px;
+      color:#67e8f9;
+      font-size:14px;
+      margin-bottom:20px;
+      letter-spacing:1px;
+    }
+
+    h1{
+      font-size:38px;
+      margin-bottom:25px;
+      line-height:1.3;
+    }
+
+    /* Digital Timer */
+
+    .timer-box{
+      background:#0f172a;
+      padding:25px;
+      border-radius:20px;
+      margin-bottom:30px;
+      border:2px solid rgba(255,255,255,0.08);
+      box-shadow:inset 0 0 15px rgba(255,255,255,0.05);
+    }
+
+    .time{
+      font-size:52px;
+      font-weight:bold;
+      letter-spacing:3px;
+      color:#67e8f9;
+      text-shadow:0 0 15px rgba(103,232,249,0.5);
+    }
+
+    /* Buttons */
+
+    .controls{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:15px;
+    }
+
+    button{
+      padding:14px;
+      border:none;
+      border-radius:14px;
+      cursor:pointer;
+      font-size:16px;
+      font-weight:600;
+      transition:0.3s;
+      color:white;
+    }
+
+    .start{
+      background:linear-gradient(135deg,#22c55e,#16a34a);
+    }
+
+    .pause{
+      background:linear-gradient(135deg,#f59e0b,#d97706);
+    }
+
+    .reset{
+      background:linear-gradient(135deg,#ef4444,#dc2626);
+    }
+
+    .lap{
+      background:linear-gradient(135deg,#06b6d4,#0891b2);
+    }
+
+    button:hover{
+      transform:translateY(-4px);
+      opacity:0.9;
+    }
+
+    /* Lap List */
+
+    .laps{
+      margin-top:25px;
+      max-height:180px;
+      overflow-y:auto;
+      text-align:left;
+    }
+
+    .laps li{
+      list-style:none;
+      padding:12px 15px;
+      margin:10px 0;
+      border-radius:12px;
+      background:rgba(255,255,255,0.05);
+      border-left:4px solid #67e8f9;
+      font-size:15px;
+    }
+
+    .laps::-webkit-scrollbar{
+      width:5px;
+    }
+
+    .laps::-webkit-scrollbar-thumb{
+      background:#67e8f9;
+      border-radius:10px;
+    }
+
+    /* Responsive */
+
+    @media(max-width:500px){
+
+      .card{
+        width:90%;
+        padding:25px;
+      }
+
+      h1{
+        font-size:30px;
+      }
+
+      .time{
+        font-size:38px;
+      }
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <!-- Glow Effects -->
+
+  <div class="glow1"></div>
+  <div class="glow2"></div>
+
+  <!-- Stopwatch Card -->
+
+  <div class="card">
+
+    <div class="tag">
+      • STOPWATCH
+    </div>
+
+    <h1>
+      Modern Stopwatch <br>
+      Application
+    </h1>
+
+    <!-- Timer -->
+
+    <div class="timer-box">
+
+      <div class="time" id="display">
+        00:00:00
+      </div>
+
+    </div>
+
+    <!-- Buttons -->
+
+    <div class="controls">
+
+      <button class="start" onclick="startTimer()">
+        Start
+      </button>
+
+      <button class="pause" onclick="pauseTimer()">
+        Pause
+      </button>
+
+      <button class="reset" onclick="resetTimer()">
+        Reset
+      </button>
+
+      <button class="lap" onclick="lapTime()">
+        Lap Time
+      </button>
+
+    </div>
+
+    <!-- Lap Records -->
+
+    <ul class="laps" id="laps"></ul>
+
+  </div>
+
+  <script>
+
+    let seconds = 0;
+    let minutes = 0;
+    let hours = 0;
+
+    let timer = null;
+
+    function updateDisplay(){
+
+      let h = hours < 10 ? "0" + hours : hours;
+      let m = minutes < 10 ? "0" + minutes : minutes;
+      let s = seconds < 10 ? "0" + seconds : seconds;
+
+      document.getElementById("display").innerText =
+      `${h}:${m}:${s}`;
+    }
+
+    function stopwatch(){
+
+      seconds++;
+
+      if(seconds === 60){
+        seconds = 0;
+        minutes++;
+      }
+
+      if(minutes === 60){
+        minutes = 0;
+        hours++;
+      }
+
+      updateDisplay();
+    }
+
+    function startTimer(){
+
+      if(timer !== null){
+        clearInterval(timer);
+      }
+
+      timer = setInterval(stopwatch,1000);
+    }
+
+    function pauseTimer(){
+      clearInterval(timer);
+    }
+
+    function resetTimer(){
+
+      clearInterval(timer);
+
+      seconds = 0;
+      minutes = 0;
+      hours = 0;
+
+      updateDisplay();
+
+      document.getElementById("laps").innerHTML = "";
+    }
+
+    function lapTime(){
+
+      let lap = document.createElement("li");
+
+      lap.innerText =
+      "Lap : " +
+      document.getElementById("display").innerText;
+
+      document.getElementById("laps")
+      .appendChild(lap);
+    }
+
+  </script>
+
+</body>
+</html>
